@@ -36,7 +36,7 @@
             $('#end').datetimepicker({ format:'yyyy-mm-dd HH:MM', uiLibrary: 'bootstrap4',footer: true });
 
             ReactDOM.render(
-                    Table({
+                    Table2({
                         columns:columns,
                         rows: []
                     }),
@@ -55,7 +55,7 @@
                 let rows = []
                 if(response.data.length > 0) rows = response.data
                 ReactDOM.render(
-                    Table({
+                    Table2({
                         columns:columns,
                         rows: rows
                     }),
@@ -65,6 +65,35 @@
                 console.log(error.response)
                 // toastr['error'](error.response.data || 'Error de servidor')
             })
+        }
+
+        function Table2(props) {
+            let itemCount = 0
+            return <table className='table table-striped'>
+                <thead>
+                    <tr>
+                        {props.columns.map(column => {
+                            itemCount++
+                            return <th scope='col' key={itemCount}>{column}</th>
+                        })}
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {
+                        props.rows.map(row => {
+                            return <tr key={row._id}>
+                                {
+                                    props.columns.map(entry => {
+                                        itemCount++
+                                        return <td key={itemCount}>{row[entry]}</td>
+                                    })
+                                }
+                            </tr>
+                        })
+                    }
+                </tbody>
+            </table>
         }
     </script>
 </body>
