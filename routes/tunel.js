@@ -229,7 +229,7 @@ module.exports = io => {
       $lt: end.valueOf()
     }
 
-    collection.find([
+    collection.aggregate([
       { $match: { startTime: options } },
       {
         $group: {
