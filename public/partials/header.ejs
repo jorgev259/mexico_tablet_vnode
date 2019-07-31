@@ -16,6 +16,7 @@
 
   $(document).ready(function () {    
     <% if (!locals.noHeader) { %>
+      axios.defaults.baseURL = baseURL
       axios.get('/itemList').then(function (response) {
         var parsedUrl = new URL(window.location.href)
 
