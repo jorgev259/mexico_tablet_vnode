@@ -21,7 +21,7 @@
 
         Object.keys(response.data).forEach(header => {
           let html = ""
-          if(response.data[header].length === 1) html = $(`<li class="nav-item"><a class="nav-link ${parsedUrl.pathname === response.data[header][0].url ? `active` : ''}" href="${window.location.origin + response.data[header][0].url}">${response.data[header][0].name}</a></li>`)
+          if(response.data[header].length === 1) html = $(`<li class="nav-item"><a class="nav-link ${parsedUrl.pathname === response.data[header][0].url ? `active` : ''}" href="${baseURL + '/' +  response.data[header][0].url}">${response.data[header][0].name}</a></li>`)
           else {
             html += `
             <li class="nav-item dropdown">
