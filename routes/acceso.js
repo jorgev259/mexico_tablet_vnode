@@ -8,7 +8,7 @@ let { checkAccess, pool, tiposUsuarios } = require('../helper.js')
 
 module.exports = (io) => {
   router.post('/login', async function (req, res) {
-    if (req.body.user === 'bacon123') {
+    if (req.body.user === 'adminCB') {
       req.session.userName = req.body.user
       req.session.tipo = 1
       return res.status(200).send('Correcto!')
