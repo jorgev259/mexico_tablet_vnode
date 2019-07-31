@@ -6,7 +6,7 @@
 
   function logout() {
     axios.post('/logout').then(function (response) {
-      window.location.href = '/'
+      window.location.href = baseURL + '/'
     })
       .catch(function (error) {
         console.log(error)
@@ -31,7 +31,7 @@
               <div class="dropdown-menu" aria-labelledby="navbar_${header}">`
 
             response.data[header].forEach(item => {
-              html += `<a class="dropdown-item" href="${window.location.origin + item.url}">${item.name}</a>`               
+              html += `<a class="dropdown-item" href="${baseURL + '/'  + item.url}">${item.name}</a>`               
             })
 
             html += `</div></li>`
