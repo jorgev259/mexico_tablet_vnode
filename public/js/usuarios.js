@@ -18,6 +18,7 @@ toastr.options = {
 }
 
 $('#addUser').submit(function (event) {
+  axios.defaults.baseURL = baseURL
   let serialData = {}
 
   $('#addUser').serializeArray().forEach(e => {
