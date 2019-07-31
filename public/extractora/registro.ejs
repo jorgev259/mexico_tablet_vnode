@@ -1,0 +1,129 @@
+<head>
+    <%- include ../partials/head.html %>
+</head>
+
+<body>
+    <%- include ../partials/header.ejs %>
+
+    <!--/Body-->
+
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="well well-sm">
+                    <form id='addUser' class="form-horizontal">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group form-row">
+                                    <label for="fecha" class="col-md-1">Fecha:</label>
+                                    <div class="col-md-3">
+                                        <input type="date" name="fecha" class="form-control inputChange" id="fecha"
+                                            required="required" />
+                                    </div>
+
+                                    <label for="turno" class="col-md-1">Turno:</label>
+                                    <div class="col-md-3">
+                                        <input type="number" name="turno" class="form-control inputChange" id="turno"
+                                            required="required" />
+                                    </div>
+                                </div>
+                                <div class="form-group table-responsive">
+                                    <table class="table" id="table">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-left" scope="col">Lavadora</th>
+                                                <th class="text-left" scope="col">Tipo Suciedad</th>
+                                                <th class="text-left" scope="col">Responsable</th>
+                                                <th class="text-left" scope="col">Supervisor</th>
+                                                <th class="text-left" scope="col">Grado de Suciedad</th>
+                                                <th class="text-left" scope="col">Tipo de Prenda</th>
+                                                <th class="text-left" scope="col">Hospital</th>
+                                                <th class="text-left" scope="col">Reproceso</th>
+                                                <th class="text-left" scope="col">Codigo Lavado</th>
+                                                <th class="text-left" scope="col">Kg lavados</th>
+                                                <th class="text-left" scope="col">Observaciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="rows"></tbody>
+                                    </table>
+                                    <br>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/axios.min.js"></script>
+    <script>
+        toastr.options = {
+            'closeButton': true,
+            'debug': false,
+            'newestOnTop': false,
+            'progressBar': false,
+            'positionClass': 'toast-top-right',
+            'preventDuplicates': true,
+            'onclick': null,
+            'showDuration': '300',
+            'hideDuration': '1000',
+            'timeOut': '0',
+            'extendedTimeOut': '0',
+            'showEasing': 'swing',
+            'hideEasing': 'linear',
+            'showMethod': 'fadeIn',
+            'hideMethod': 'fadeOut'
+        }
+
+        let changes = []
+
+        function addRow(turno, date) {
+            axios({
+                method: 'get',
+                url: `/extractora/${turno}/${date.getTime()}`
+            }).then(res => {
+                let { data } = res
+                data.forEach(entry => {
+                    let htmlStr = '<tr>'
+                    let cols = ['lavadora', 'suciedad', 'responsable', 'supervisor', 'grado', 'prenda', 'hospital', 'reproceso', 'total', 'lavados', 'observaciones']
+                    cols.forEach(col => {if (col !== 'id') htmlStr += `<td${col === 'hospital' ? ' class="bold"' : ''}>${entry[col] || ''}</td>`})
+
+                    htmlStr += '</tr>'
+                    let html = $(htmlStr)
+                    html.each((i, e) => {
+                        $('#rows')[0].append(e)
+                    })
+                })
+                toastr['success']('Registros Actualizados!')
+            }).catch(function (error) {
+                console.log(error)
+                toastr['error']('Error al recuperar registros')
+            })
+        }
+
+        $('.inputChange').change(function () {
+            $('#table tbody td').remove()
+            addRow($('#turno').val(), new Date($('#fecha').val()))
+        })
+
+        function save(ev) {
+            let { id } = ev.dataset
+            let { name, value } = ev
+
+            if (!changes[id]) changes[id] = {}
+            changes[id][name] = value
+        }
+
+        function confirm() {
+            axios.post('/updateRegistros', changes).then(function (response) {
+                toastr['success']('Registros Actualizados!')
+            })
+                .catch(function (error) {
+                    console.log(error)
+                    toastr['error']('Error al actualizar registros')
+                })
+        }
+    </script>
+</body>

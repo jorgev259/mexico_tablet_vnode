@@ -1,0 +1,87 @@
+<head>
+    <%- include ../partials/head.html %>
+</head>
+
+<body>
+    <%- include ../partials/header.ejs %>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="well well-sm">
+                    <div class="form-group form-row">
+                        <label for="start" class="col-md-1">Inicio: </label>
+                        <div class="col-md-2">
+                            <input name="start" class="form-control inputChange" id="start">
+                        </div>
+                        <label for="end" class="col-md-1">Fin: </label>
+                        <div class="col-md-2">
+                            <input name="end" class="form-control inputChange" id="end">
+                        </div>
+                        <div class="col-md-2"></div>
+
+                        <div class="form-check form-check-inline col-md-1">
+                            <input class="form-check-input inputChange" type="radio" name="tipo" id="inlineRadio1" value="registro" checked>
+                            <label class="form-check-label" for="inlineRadio1">Registro</label>
+                          </div>
+                          <div class="form-check form-check-inline col-md-1">
+                            <input class="form-check-input inputChange" type="radio" name="tipo" id="inlineRadio2" value="diario">
+                            <label class="form-check-label" for="inlineRadio2">Diario</label>
+                          </div>
+                          <div class="form-check form-check-inline col-md-1">
+                            <input class="form-check-input inputChange" type="radio" name="tipo" id="inlineRadio3" value="mensual">
+                            <label class="form-check-label" for="inlineRadio3">Mensual</label>
+                          </div>
+
+                    </div>
+                    <div id="root" class="table-responsive"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const socket = io('localhost:3005')
+        socket.on('extractora', function (msg) {
+            console.log('refresh')
+            loadTable()
+        })
+        let tipo="registro"
+        let keys=["Lavadora"]
+        let columns = ["Lavadora", "Total"]
+        $(document).ready(function () {
+            $('#start').datetimepicker({ format: 'yyyy-mm-dd HH:MM', uiLibrary: 'bootstrap4', footer: true });
+            $('#end').datetimepicker({ format: 'yyyy-mm-dd HH:MM', uiLibrary: 'bootstrap4', footer: true });
+            console.log(Table)
+            ReactDOM.render(
+                Table({
+                        columns: tipo === 'registro' ? columns: ['Fecha'].concat(columns),
+                        rows: []
+                    }),
+                document.getElementById('root')
+            )
+        });
+
+
+        $('.inputChange').change(function (ev) {
+            if(ev.target.name === "tipo") tipo = ev.target.value
+            loadTable()
+        })
+
+        function loadTable() {
+            axios.get(`/extractora/fetch/lavadora/${tipo}/${moment($("#start").val()).valueOf()}/${moment($("#end").val()).valueOf()}`).then(function (response) {
+                console.log(response)
+
+                ReactDOM.render(
+                    Table({
+                        columns: tipo === 'registro' ? columns: ['Fecha'].concat(columns),
+                        rows: response.data
+                    }),
+                    document.getElementById('root')
+                )
+            }).catch(function (error) {
+                console.log(error.response)
+                // toastr['error'](error.response.data || 'Error de servidor')
+            })
+        }
+
+    </script>
+</body>

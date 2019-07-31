@@ -1,0 +1,222 @@
+<head>
+    <%- include ../partials/head.html %>
+</head>
+
+<body>
+    <%- include ../partials/header.ejs %>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="well well-sm">
+                    <form id='addUser' class="form-horizontal">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group form-row">
+                                    <label for="fecha" class="col-md-1">Fecha:</label>
+                                    <div class="col-md-3">
+                                        <input type="date" name="fecha" class="form-control" id="fecha"
+                                            required="required" />
+                                    </div>
+                                    <label for="lavadora" class="col-md-1">Lavadora:</label>
+                                    <div class="col-md-3">
+                                        <!--<input type="text" name="lavadora" class="form-control" id="lavadora" required="required" />-->
+                                        <select class="custom-select form-control" name="lavadora" id="lavadora"
+                                            required="required">
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="laboratorio">Laboratorio</option>
+                                        </select>
+                                    </div>
+
+                                    <label for="turno" class="col-md-1">Turno:</label>
+                                    <div class="col-md-3">
+                                        <input type="number" name="turno" class="form-control" id="turno"
+                                            required="required" />
+                                    </div>
+
+                                </div>
+
+                                <div class="form-group form-row">
+                                    <label for="responsable" class="col-md-2">Responsable:</label>
+                                    <div class="col-md-3">
+                                        <input type="text" name="responsable" class="form-control" id="responsable"
+                                            required="required" />
+                                    </div>
+                                    <div class="col-md-2"></div>
+                                    <label for="supervisor" class="col-md-2">Supervisor:</label>
+                                    <div class="col-md-3">
+                                        <input type="text" name="supervisor" class="form-control" id="supervisor"
+                                            required="required" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group form-row">
+                                    <div class="col-md-1"><input type="checkbox" style="height:25px;"
+                                            class="form-control" id="checkObservaciones" />
+                                    </div>
+                                    <label for="observaciones" class="col-md-2">Observaciones:</label>
+                                    <div class="col-md-9">
+                                        <input type="text" name="observaciones" maxlength="100" class="form-control"
+                                            id="observaciones" disabled />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <table class="table-fill">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-left">Tipo Suciedad</th>
+                                                <th class="text-left">Grado Suciedad</th>
+                                                <th class="text-left">Tipo de Prenda</th>
+                                                <th class="text-left">Centro Hospitalario</th>
+                                                <th class="text-left">Reproceso</th>
+                                                <th class="text-left">Codigo Lavado</th>
+                                                <th class="text-left">Kg lavados</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="table-hover" id="rows"></tbody>
+                                    </table>
+                                    <br>
+                                    <input class="btn btn-primary pull-right " type="submit" value="Enviar">
+                                    <input class="btn btn-primary pull-right " type="button" onclick="addRow()"
+                                        value="Agregar Registro">
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/axios.min.js"></script>
+    <script type="text/babel">
+        let count = 0
+        toastr.options = {
+            'closeButton': true,
+            'debug': false,
+            'newestOnTop': false,
+            'progressBar': false,
+            'positionClass': 'toast-top-right',
+            'preventDuplicates': true,
+            'onclick': null,
+            'showDuration': '300',
+            'hideDuration': '1000',
+            'timeOut': '0',
+            'extendedTimeOut': '0',
+            'showEasing': 'swing',
+            'hideEasing': 'linear',
+            'showMethod': 'fadeIn',
+            'hideMethod': 'fadeOut'
+        }
+
+        function deleteRow(id) {
+            $(`tr#row_${id}`).remove()
+        }
+
+        function addRow() {
+            let html = $(`<tr id="row_${count}"><td class="text-left"><select name="suciedad_${count}" class="form-control" required="required">
+                <option value="na" selected="">Escoge Uno:</option>
+                <option value="Suciedad Liviana">Suciedad Liviana</option>
+                <option value="Suciedad Regular">Suciedad Regular</option>
+                <option value="Suciedad Pesada">Suciedad Pesada</option>  
+                <option value="Suciedad Contaminada">Suciedad Contaminada</option> 
+                <option value="Suciedad muy Pesada">Suciedad Nueva</option>
+                </select></td>
+                <td class="text-left"><input type="text" name="grado_${count}" class="form-control" required="required" /></td>
+                <td class="text-left"><input type="text" name="prenda_${count}" class="form-control" required="required" /></td>
+                <td class="text-left"><input type="text" name="hospital_${count}" oninput="this.value = this.value.toUpperCase()" class="form-control" required="required" /></td>
+                <td class="text-left"><select name="reproceso_${count}" class="form-control" required="required">
+                <option value="No" selected="">No</option>
+                <option value="Si" >Si</option>
+                </select></td>
+                <td class="text-left"><input type="text" name="total_${count}" id="total_${count}" class="form-control" readonly="readonly" required="required" /></td>
+                <td class="text-left"><input type="number" max=300 name="lavados_${count}" id="lavados_${count}" class="form-control" required="required" /></td>
+                <td><input class="btn btn-primary" type="button" onclick="deleteRow(${count})" value="Eliminar"></td>
+            </tr>`)
+            html.each((i, e) => {
+                $('#rows')[0].append(e)
+            })
+
+            count++
+        }
+
+        $(document).ready(() => addRow())
+
+        $('#checkObservaciones').change(function (event) {
+            $('#observaciones')[0].disabled = !event.target.checked
+        })
+
+        $('#addUser').submit(function (event) {
+            let data = []
+            let serialData = {}
+            $('.lockScreen').show()
+
+            $('#addUser').serializeArray().forEach(e => {
+                serialData[e.name] = e.value
+            })
+
+            for (let i = 0; i < count; i++) {
+                let sendData = {
+                    'fecha': moment(serialData.fecha).valueOf() ,
+                    'lavadora': serialData.lavadora,
+                    'turno': serialData.turno,
+                    'responsable': serialData.responsable,
+                    'supervisor': serialData.supervisor,
+                    suciedad: serialData[`suciedad_${i}`],
+                    grado: serialData[`grado_${i}`],
+                    prenda: serialData[`prenda_${i}`],
+                    hospital: serialData[`hospital_${i}`],
+                    reproceso: serialData[`reproceso_${i}`],
+                    total: parseInt(serialData[`total_${i}`]),
+                    lavados: parseInt(serialData[`lavados_${i}`])
+                }
+
+                if (serialData.observaciones) sendData.observaciones = serialData.observaciones
+                data.push(sendData)
+            }
+
+            axios.post('/extractora', data).then(function (response) {
+                setTimeout(function () {
+                    location.reload(true)
+                }, toastr.options.timeOut)
+                toastr['success']('Registros Actualizados!')
+            })
+                .catch(function (error) {
+                    console.log(error)
+                    toastr['error']('Error al actualizar registros')
+                }).finally(function () {
+                    $('.lockScreen').hide()
+                })
+            event.preventDefault()
+        })
+
+        $('#lavadora').on('change', function () {
+            let value = 0
+            switch (this.value) {
+                case '1':
+                    value = 100
+                    break
+                case '2':
+                    value = 200
+                    break
+                case '3':
+                    value = 200
+                    break
+                case '4':
+                    value = 90
+                    break
+                case 'laboratorio':
+                    value = 33
+                    break
+            }
+
+            for (let i = 0; i < count; i++) {
+                $(`#total_${i}`)[0].value = value
+            }
+        })
+    </script>
+</body>

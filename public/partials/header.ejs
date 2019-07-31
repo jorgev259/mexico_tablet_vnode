@@ -1,0 +1,85 @@
+<script>
+  /* global axios,toastr,$ */
+  $(document).ready(() =>  $('.lockScreen').hide() )
+
+  function logout() {
+    axios.post('/logout').then(function (response) {
+      window.location.href = '/'
+    })
+      .catch(function (error) {
+        console.log(error)
+        toastr['error']('Error al actualizar registros')
+      })
+  }
+
+  $(document).ready(function () {    
+    <% if (!locals.noHeader) { %>
+      axios.get('/itemList').then(function (response) {
+        var parsedUrl = new URL(window.location.href)
+
+        Object.keys(response.data).forEach(header => {
+          let html = ""
+          if(response.data[header].length === 1) html = $(`<li class="nav-item"><a class="nav-link ${parsedUrl.pathname === response.data[header][0].url ? `active` : ''}" href="${window.location.origin + response.data[header][0].url}">${response.data[header][0].name}</a></li>`)
+          else {
+            html += `
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" id="navbar_${header}" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                ${header}
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbar_${header}">`
+
+            response.data[header].forEach(item => {
+              html += `<a class="dropdown-item" href="${window.location.origin + item.url}">${item.name}</a>`               
+            })
+
+            html += `</div></li>`
+            html = $(html)
+          }
+          html.each((i, e) => {
+            $('#navbarAdd')[0].append(e)
+          })
+        })
+
+        let logoutBtn = $(`<li class="nav-item">
+    <a class="nav-link " href="#"  data-ajax="false" onclick="logout()">Cerrar Sesión</a>
+    </li>`)
+        logoutBtn.each((i, e) => {
+          $('#navbarAdd')[0].append(e)
+        })
+      })
+        .catch(function (error) {
+          console.log(error)
+          toastr['error']('Error al actualizar paginas')
+        })
+      <% } %> // eslint-disable-line
+  })
+
+</script>
+<nav style="background-color: #e3f2fd;" class="navbar-expand-lg navbar navbar-light bg-ligt sticky-top">
+  <a class="navbar-brand">
+    <img src="/img/logo.png" height="35" alt="">
+  </a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02"
+    aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+    <ul class="navbar-nav mr-auto mt-2 mt-lg-0" id="navbarAdd"></ul>
+  </div>
+</nav>
+<div class="lockScreen">
+    <div class="row" style="margin-top: 200px">
+        <div class="col-md-4">
+
+        </div>
+
+        <div class="col-md-4">
+            <img src="/img/load.gif" style="height:200px" />
+        </div>
+
+        <div class="col-md-4">
+
+        </div>
+    </div>
+</div>

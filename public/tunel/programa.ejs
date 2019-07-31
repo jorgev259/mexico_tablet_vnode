@@ -1,0 +1,117 @@
+<head>
+    <%- include ../partials/head.html %>
+</head>
+
+<body>
+    <%- include ../partials/header.ejs %>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="well well-sm">
+                    <div class="form-group form-row">
+                        <label for="start" class="col-md-1">Inicio: </label>
+                        <div class="col-md-2">
+                            <input name="start" class="form-control inputChange" id="start">
+                        </div>
+                        <label for="end" class="col-md-1">Fin: </label>
+                        <div class="col-md-2">
+                            <input name="end" class="form-control inputChange" id="end">
+                        </div>
+                        <div class="col-md-2"></div>
+
+                        <div class="form-check form-check-inline col-md-1">
+                            <input class="form-check-input inputChange" type="radio" name="tipo" id="inlineRadio1" value="registro" checked>
+                            <label class="form-check-label" for="inlineRadio1">Registro</label>
+                          </div>
+                          <div class="form-check form-check-inline col-md-1">
+                            <input class="form-check-input inputChange" type="radio" name="tipo" id="inlineRadio2" value="diario">
+                            <label class="form-check-label" for="inlineRadio2">Diario</label>
+                          </div>
+                          <div class="form-check form-check-inline col-md-1">
+                            <input class="form-check-input inputChange" type="radio" name="tipo" id="inlineRadio3" value="mensual">
+                            <label class="form-check-label" for="inlineRadio3">Mensual</label>
+                          </div>
+
+                    </div>
+                    <div id="root" class="table-responsive"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const socket = io('localhost:3005')
+        socket.on('tunel_update', function (ev) {
+            console.log('tunel actualizado')
+            loadTable()
+        })
+
+    </script>
+    <script>
+        var tipo = "registro"
+        let keys =  ["Codigo", "Programa"]
+        let columns = ["Codigo", "Programa", "Total"]
+        $( document ).ready(function() {
+            $('#start').datetimepicker({ format:'yyyy-mm-dd HH:MM', uiLibrary: 'bootstrap4',footer: true});
+            $('#end').datetimepicker({ format:'yyyy-mm-dd HH:MM', uiLibrary: 'bootstrap4',footer: true });
+
+            ReactDOM.render(
+                    Table({
+                        columns: tipo === 'registro' ? columns: ['Fecha'].concat(columns),
+                        rows: []
+                    }),
+                    document.getElementById('root')
+                )
+        });
+
+
+        $('.inputChange').change(function (ev) {
+            if(ev.target.name === "tipo") tipo = ev.target.value
+            loadTable()
+        })
+
+        function loadTable(){
+            axios.get(`/tunel/fetch/programa/${tipo}/${moment($("#start").val()).valueOf()}/${moment($("#end").val()).valueOf()}`).then(function (response) {
+                console.log(response)
+                let rows = []
+                if(response.data.length > 0) rows = response.data
+                ReactDOM.render(
+                    Table({
+                        columns: tipo === 'registro' ? columns: ['Fecha'].concat(columns),
+                        rows: rows
+                    }),
+                    document.getElementById('root')
+                )
+            }).catch(function (error) {
+                console.log(error.response)
+                // toastr['error'](error.response.data || 'Error de servidor')
+            })
+        }
+
+        function Table(props) {
+            return <table className='table table-striped'>
+                <thead>
+                    <tr>
+                        {props.columns.map(column => {
+                            return <th scope='col' key={column}>{column}</th>
+                        })}
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {
+                        props.rows.map(row => {
+                            var key =  tipo === 'registro' ? keys.map(k => row[k]).join('_') : ['Fecha'].concat(keys).map(k => row[k]).join('_')
+                            return <tr key={key}>
+                                {
+                                    props.columns.map(entry => {
+                                        return <td kwy={`${key}_${entry}`}>{row[entry]}</td>
+                                    })
+                                }
+                            </tr>
+                        })
+                    }
+                </tbody>
+            </table>
+        }
+    </script>
+</body>

@@ -1,0 +1,61 @@
+<head>
+    <%- include ../partials/head.html %>
+</head>
+
+<body>
+    <%- include ../partials/header.ejs %>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="well well-sm">
+                    <form id='addUser' class="form-horizontal">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group form-row">
+                                    <label for="fecha" class="col-md-1">Fecha:</label>
+                                    <div class="col-md-3">
+                                        <input type="date" name="fecha" class="form-control inputChange" id="fecha"
+                                            required="required" />
+                                    </div>
+
+                                    <label for="turno" class="col-md-1">Turno:</label>
+                                    <div class="col-md-3">
+                                        <input type="number" name="turno" class="form-control inputChange" id="turno"
+                                            required="required" />
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <input class="btn btn-primary pull-right " type="button" onclick="confirm()"
+                                            value="Guardar Cambios">
+                                    </div>
+                                </div>
+                                <div class="form-group table-responsive">
+                                    <table class="table" id="table">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-left">Lavadora</th>
+                                                <th class="text-left">Tipo Suciedad</th>
+                                                <th class="text-left">Responsable</th>
+                                                <th class="text-left">Supervisor</th>
+                                                <th class="text-left">Grado de Suciedad</th>
+                                                <th class="text-left">Tipo de Prenda</th>
+                                                <th class="text-left">Hospital</th>
+                                                <th class="text-left">Reproceso</th>
+                                                <th class="text-left">Codigo Lavado</th>
+                                                <th class="text-left">Kgs lavados</th>
+                                                <th class="text-left">Observaciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="table-hover" id="rows"></tbody>
+                                    </table>
+                                    <br>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/babel" src="/js/extractora_modificar.jsx"></script>
+</body>

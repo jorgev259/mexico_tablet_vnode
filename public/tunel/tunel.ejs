@@ -1,0 +1,99 @@
+<head>
+    <%- include ../partials/head.html %>
+</head>
+
+<body>
+    <%- include ../partials/header.ejs %>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="well well-sm">
+                    <div class="form-group form-row">
+                        <label for="start" class="col-md-1">Inicio: </label>
+                        <div class="col-md-5">
+                            <input name="start" class="form-control inputChange" id="start">
+                        </div>
+                        <label for="end" class="col-md-1">Fin: </label>
+                        <div class="col-md-5">
+                            <input name="end" class="form-control inputChange" id="end">
+                        </div>
+                    </div>
+                    <div id="root" class="table-responsive"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/babel">
+        var socket = io();
+        socket.on('tunel_update', function (ev) {
+            console.log('tunel actualizado')
+            loadTable()
+        })
+
+        let columns = ["startTime", "programa", "peso", "cliente", "camara_3", "camara_8", "camara_9", "camara_11", "tanque_1", "tanque2"]
+        $( document ).ready(function() {
+            $('#start').datetimepicker({ format:'yyyy-mm-dd HH:MM', uiLibrary: 'bootstrap4',footer: true});
+            $('#end').datetimepicker({ format:'yyyy-mm-dd HH:MM', uiLibrary: 'bootstrap4',footer: true });
+
+            ReactDOM.render(
+                    Table({
+                        columns:columns,
+                        rows: []
+                    }),
+                    document.getElementById('root')
+                )
+        });
+
+
+        $('.inputChange').change(function (ev) {
+            loadTable()
+        })
+
+        function loadTable(){
+            axios.get(`/tunel/registro/${(moment($("#start").val())).valueOf()}/${moment(new Date($("#end").val())).valueOf()}`).then(function (response) {
+                console.log(response)
+                let rows = []
+                if(response.data.length > 0) rows = response.data
+                ReactDOM.render(
+                    Table({
+                        columns:columns,
+                        rows: rows
+                    }),
+                    document.getElementById('root')
+                )
+            }).catch(function (error) {
+                console.log(error.response)
+                // toastr['error'](error.response.data || 'Error de servidor')
+            })
+        }
+
+        function Table(props) {
+            let itemCount = 0
+            return <table className='table table-striped'>
+                <thead>
+                    <tr>
+                        {props.columns.map(column => {
+                            itemCount++
+                            return <th scope='col' key={itemCount}>{column}</th>
+                        })}
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {
+                        props.rows.map(row => {
+                            return <tr key={row._id}>
+                                {
+                                    props.columns.map(entry => {
+                                        itemCount++
+                                        return <td key={itemCount}>{row[entry]}</td>
+                                    })
+                                }
+                            </tr>
+                        })
+                    }
+                </tbody>
+            </table>
+        }
+    </script>
+</body>

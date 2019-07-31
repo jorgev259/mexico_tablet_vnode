@@ -1,0 +1,45 @@
+<head>
+    <%- include partials/head.html %>
+</head>
+
+<body>
+    <%- include partials/header.ejs %>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="well well-sm">
+                    <form id='addUser' class="form-horizontal">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group form-row">
+                                    <label for="user" class="col-md-1">Nombre de usuario:</label>
+                                    <div class="col-md-3">
+                                        <input type="text" name="user" class="form-control" id="user" required="required" />
+                                    </div>
+                                    <label for="pass" class="col-md-1">Contraseña:</label>
+                                    <div class="col-md-3">
+                                        <input type="text" name="pass" class="form-control" id="pass" required="required" />
+                                    </div>
+
+                                    <label for="type" class="col-md-1">Tipo:</label>
+                                    <div class="col-md-3">
+                                        <select name="type" class="form-control" required="required" id="select_type">
+                                            <% usuarios.forEach(usuario => {%>
+                                            <option value="<%= usuario %>"><%= usuario %></option>
+                                            <% }) %>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <input class="btn btn-primary pull-right " type="submit" value="Agregar Usuario">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="js/usuarios.js"></script>
+</body>
