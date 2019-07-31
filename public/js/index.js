@@ -28,7 +28,7 @@ $('#addUser').submit(function (event) {
     toastr['success']('Ingreso correcto!')
     setTimeout(function () {
       const urlParams = new URLSearchParams(window.location.search)
-      window.location.replace(urlParams.get('redirect') || '/ingreso')
+      window.location.replace(baseURl + '/ingreso')
     }, toastr.options.timeOut)
   })
     .catch(function (error) {

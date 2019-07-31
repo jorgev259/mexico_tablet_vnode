@@ -1,6 +1,7 @@
 <script>
   /* global axios,toastr,$ */
-  axios.defaults.baseURL = 'http://45.79.26.219/vnode/'
+  let baseURL = 'http://45.79.26.219/vnode'
+  axios.defaults.baseURL = baseURL
   $(document).ready(() =>  $('.lockScreen').hide() )
 
   function logout() {
