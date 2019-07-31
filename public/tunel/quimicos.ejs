@@ -88,33 +88,6 @@
             })
         }
 
-        function Table(props) {
-            let itemCount = 0
-            return <table className='table table-striped'>
-                <thead>
-                    <tr>
-                        {props.columns.map(column => {
-                            itemCount++
-                            return <th scope='col' key={itemCount}>{column}</th>
-                        })}
-                    </tr>
-                </thead>
-
-                <tbody>
-                    {
-                        props.rows.map(row => {
-                            var key =  tipo === 'registro' ? keys.map(k => row[k]).join('_') : ['Fecha'].concat(keys).map(k => row[k]).join('_')
-                            return <tr key={key}>
-                                {
-                                    props.columns.map(entry => {
-                                        return <td kwy={`${key}_${entry}`}>{row[entry]}</td>
-                                    })
-                                }
-                            </tr>
-                        })
-                    }
-                </tbody>
-            </table>
-        }
+       
     </script>
 </body>
