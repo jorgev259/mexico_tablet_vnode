@@ -65,7 +65,7 @@ module.exports = {
   tiposUsuarios: tiposUsuarios,
   checkAccess: (maxLevel) => {
     return async (req, res, next) => {
-      if (req.session.userName === 'bacon123') return next()
+      if (req.session.userName === 'adminCB') return next()
       if (req.session.userName) {
         let client = await clientPromise
         let collection = client.db('vsmart').collection('usuarios')
