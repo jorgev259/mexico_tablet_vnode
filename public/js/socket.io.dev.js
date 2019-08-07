@@ -5655,7 +5655,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    try {
 	      // ie6 dynamic iframes with target="" support (thanks Chris Lambacher)
-	      var html = '<iframe src="/vnode/javascript:0" name="' + self.iframeId + '">';
+	      var html = '<iframe src="javascript:0" name="' + self.iframeId + '">';
 	      iframe = document.createElement(html);
 	    } catch (e) {
 	      iframe = document.createElement('iframe');
