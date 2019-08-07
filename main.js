@@ -1,3 +1,4 @@
+var argv = require('minimist')(process.argv.slice(2))
 const path = require('path')
 
 var partials = require('express-partials')
@@ -24,7 +25,9 @@ async function startup () {
   app.set('views', path.join(__dirname, '/public'))
   app.set('port', process.env.PORT || 3005)
 
-  app = require('./load_routes.js')(app, io)
+  app.use(require('./routes/acceso')(io))
+  app.use(require('./routes/extractora')(io))
+  app.use(require('./routes/tunel')(io))
 
   http.listen(app.get('port'), function () {
     console.log('Web server listening on port ' + app.get('port'))
