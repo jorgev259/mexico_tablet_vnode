@@ -1,12 +1,9 @@
 <script>
-  /* global axios,toastr,$ */
-  /* let baseURL = 'http://45.79.26.219/vnode'
-  axios.defaults.baseURL = baseURL */
   $(document).ready(() =>  $('.lockScreen').hide() )
 
   function logout() {
     axios.post('/logout').then(function (response) {
-      window.location.href = baseURL + '/'
+      window.location.href = '/'
     })
       .catch(function (error) {
         console.log(error)
@@ -16,13 +13,12 @@
 
   $(document).ready(function () {    
     <% if (!locals.noHeader) { %>
-      // axios.defaults.baseURL = baseURL
       axios.get('itemList').then(function (response) {
         var parsedUrl = new URL(window.location.href)
 
         Object.keys(response.data).forEach(header => {
           let html = ""
-          if(response.data[header].length === 1) html = $(`<li class="nav-item"><a class="nav-link ${parsedUrl.pathname === response.data[header][0].url ? `active` : ''}" href="${baseURL + '/' +  response.data[header][0].url}">${response.data[header][0].name}</a></li>`)
+          if(response.data[header].length === 1) html = $(`<li class="nav-item"><a class="nav-link ${parsedUrl.pathname === response.data[header][0].url ? `active` : ''}" href="${response.data[header][0].url}">${response.data[header][0].name}</a></li>`)
           else {
             html += `
             <li class="nav-item dropdown">
@@ -32,7 +28,7 @@
               <div class="dropdown-menu" aria-labelledby="navbar_${header}">`
 
             response.data[header].forEach(item => {
-              html += `<a class="dropdown-item" href="${baseURL + '/'  + item.url}">${item.name}</a>`               
+              html += `<a class="dropdown-item" href="${item.url}">${item.name}</a>`               
             })
 
             html += `</div></li>`
@@ -60,7 +56,7 @@
 </script>
 <nav style="background-color: #e3f2fd;" class="navbar-expand-lg navbar navbar-light bg-ligt sticky-top">
   <a class="navbar-brand">
-    <img src="vnode/img/logo.png" height="35" alt="">
+    <img src="img/logo.png" height="35" alt="">
   </a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02"
     aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
@@ -78,7 +74,7 @@
         </div>
 
         <div class="col-md-4">
-            <img src="vnode/img/load.gif" style="height:200px" />
+            <img src="img/load.gif" style="height:200px" />
         </div>
 
         <div class="col-md-4">

@@ -18,14 +18,13 @@ toastr.options = {
 }
 
 $('#addUser').submit(function (event) {
-  axios.defaults.baseURL = baseURL
   let serialData = {}
 
   $('#addUser').serializeArray().forEach(e => {
     serialData[e.name] = e.value
   })
 
-  axios.post('/register', serialData).then(function (response) {
+  axios.post('register', serialData).then(function (response) {
     toastr['success']('Ingreso correcto!')
   })
     .catch(function (error) {
