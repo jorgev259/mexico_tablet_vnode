@@ -37,7 +37,7 @@ async function startup () {
     router.use('/favicon.ico', express.static(path.join(__dirname, '/public/favicon.ico')))
     app.use('/vnode', router)
   } else {
-    app.use('/', router)
+    app.use('/vnode', router)
   }
 
   http.listen(app.get('port'), function () {
