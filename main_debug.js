@@ -1,4 +1,3 @@
-var argv = require('minimist')(process.argv.slice(2))
 const path = require('path')
 
 var partials = require('express-partials')
@@ -26,9 +25,7 @@ async function startup () {
   app.set('views', path.join(__dirname, '/public'))
   app.set('port', process.env.PORT || 3005)
 
-  router.use(require('./routes/acceso')(io))
-  router.use(require('./routes/extractora')(io))
-  router.use(require('./routes/tunel')(io))
+  router = require('./load_routes.js')(router, io)
 
   router.use('/js', express.static(path.join(__dirname, '/public/js')))
   router.use('/img', express.static(path.join(__dirname, '/public/img')))

@@ -1,4 +1,3 @@
-var argv = require('minimist')(process.argv.slice(2))
 const path = require('path')
 
 var partials = require('express-partials')
@@ -25,16 +24,7 @@ async function startup () {
   app.set('views', path.join(__dirname, '/public'))
   app.set('port', process.env.PORT || 3005)
 
-  app.use(require('./routes/acceso')(io))
-  app.use(require('./routes/extractora')(io))
-  app.use(require('./routes/tunel')(io))
-
-  if (argv.d) {
-    app.use('/js', express.static(path.join(__dirname, '/public/js')))
-    app.use('/img', express.static(path.join(__dirname, '/public/img')))
-    app.use('/style', express.static(path.join(__dirname, '/public/style')))
-    app.use('/favicon.ico', express.static(path.join(__dirname, '/public/favicon.ico')))
-  }
+  app = require('./load_routes.js')(app, io)
 
   http.listen(app.get('port'), function () {
     console.log('Web server listening on port ' + app.get('port'))
