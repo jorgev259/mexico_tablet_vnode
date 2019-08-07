@@ -24,11 +24,11 @@ $('#addUser').submit(function (event) {
     serialData[e.name] = e.value
   })
 
-  axios.post('/login', serialData).then(function (response) {
+  axios.post('login', serialData).then(function (response) {
     toastr['success']('Ingreso correcto!')
     setTimeout(function () {
       const urlParams = new URLSearchParams(window.location.search)
-      window.location.replace(baseURL + '/extractora/ingreso')
+      window.location.replace('extractora/ingreso')
     }, toastr.options.timeOut)
   })
     .catch(function (error) {

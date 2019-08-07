@@ -6,6 +6,10 @@ var moment = require('moment')
 var mongo = require('mongodb')
 
 module.exports = io => {
+  router.get('/config/quimicos', checkAccess(4), function (req, res) {
+    res.render('config/quimicos.ejs')
+  })
+
   router.get('/extractora/ingreso', checkAccess(4), function (req, res) {
     res.render('extractora/ingreso.ejs')
   })
