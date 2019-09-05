@@ -7,6 +7,8 @@ const MongoStore = require('connect-mongo')(session)
 
 var express = require('express')
 var app = express()
+const morgan = require('morgan')
+app.use(morgan('dev'))
 var router = express.Router()
 
 var http = require('http').createServer(app)
